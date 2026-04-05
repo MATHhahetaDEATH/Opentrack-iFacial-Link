@@ -4,19 +4,20 @@ param (
     [string]$Mode = "Standalone"
 )
 
-# VTubeLink Windows Build & Packaging Script
-$AppName = "VTubeLink"
-$DistDir = "..\dist"
+# OpentrackLink Windows Build & Packaging Script
+$AppName = "OpentrackLink"
+# Use absolute path to avoid permission/context issues
+$DistDir = Join-Path $PSScriptRoot "..\dist"
 $IconSource = "app_icon.png"
 $IconOutput = "app_icon.ico"
 
-Write-Host "=== Building VTubeLink (Mode: $Mode) ===" -ForegroundColor Cyan
+Write-Host "=== Building OpentrackLink (Mode: $Mode) ===" -ForegroundColor Cyan
 
 # 1. Generate Multi-Resolution Icon
 if (Test-Path $IconSource) {
     Write-Host "Generating multi-resolution icon..." -ForegroundColor Yellow
     
-    $TempDir = "icon_gen_temp"
+    $TempDir = Join-Path $PSScriptRoot "icon_gen_temp"
     if (Test-Path $TempDir) { Remove-Item -Recurse -Force $TempDir }
     New-Item -ItemType Directory -Path $TempDir | Out-Null
     
@@ -39,7 +40,7 @@ if (Test-Path $IconSource) {
     dotnet run --project $TempDir
     
     if (Test-Path "$TempDir\$IconOutput") {
-        Copy-Item "$TempDir\$IconOutput" "."
+        Copy-Item "$TempDir\$IconOutput" "." -Force
         Write-Host "Icon generated successfully." -ForegroundColor Green
     }
     
@@ -47,7 +48,13 @@ if (Test-Path $IconSource) {
 }
 
 # 2. Build and Publish
-if (Test-Path $DistDir) { Remove-Item -Recurse -Force $DistDir }
+if (Test-Path $DistDir) { 
+    Write-Host "Cleaning dist folder..." -ForegroundColor Gray
+    # Try to stop potentially running instances to prevent file lock
+    Get-Process $AppName -ErrorAction SilentlyContinue | Stop-Process -Force
+    Start-Sleep -Seconds 1 # Wait for OS to release locks
+    Remove-Item -Recurse -Force $DistDir -ErrorAction SilentlyContinue
+}
 
 $PublishArgs = @("publish", "-c", "Release", "-o", $DistDir)
 
@@ -73,10 +80,14 @@ dotnet @PublishArgs
 Write-Host ""
 Write-Host "=== Build Complete ===" -ForegroundColor Green
 
-if (Test-Path "$DistDir\VTubeLink.exe") {
-    $fileSize = (Get-Item "$DistDir\VTubeLink.exe").Length / 1MB
-    Write-Host "Executable: $(Get-Item $DistDir)\VTubeLink.exe" -ForegroundColor Cyan
+# 3. Final Verification (Add slight delay for AV scan)
+$TargetFile = Join-Path $DistDir "$AppName.exe"
+Start-Sleep -Milliseconds 500
+
+if (Test-Path $TargetFile) {
+    $fileSize = (Get-Item $TargetFile).Length / 1MB
+    Write-Host "Executable: $TargetFile" -ForegroundColor Cyan
     Write-Host "File Size:  $($fileSize.ToString("F2")) MB" -ForegroundColor Gray
 } else {
-    Write-Error "Build failed: VTubeLink.exe not found"
+    Write-Error "Build failed: $AppName.exe not found at $TargetFile"
 }

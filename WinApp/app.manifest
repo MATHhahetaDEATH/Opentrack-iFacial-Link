@@ -3,7 +3,7 @@
 
   <assemblyIdentity 
     version="0.2.0.0"
-    name="com.kasumitang.vtslink" />
+    name="com.kasumitang.opentracklink" />
 
   <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
     <security>

@@ -9,10 +9,10 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>app_icon.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <AssemblyName>VTubeLink</AssemblyName>
+    <AssemblyName>OpentrackLink</AssemblyName>
     <Version>0.2.0</Version>
     <Authors>kasumitang</Authors>
-    <Product>VTube Studio - iFacialMocap Bridge</Product>
+    <Product>Opentrack - iFacialMocap Bridge</Product>
     <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
   </PropertyGroup>
 
