@@ -1,0 +1,52 @@
+# macOS
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Icon\r
+
+# Xcode
+DerivedData/
+*.xcuserstate
+xcuserdata/
+
+# App Build
+build/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+env/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Project Specific
+config.json
+.vtubelink_config.json
+
+# VS Code
+.vscode/
+
+# .NET / Windows
+[Bb]in/
+[Oo]bj/
+dist/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build Artifacts
+app_icon.ico
+Helpers/icon_gen_temp/
+
